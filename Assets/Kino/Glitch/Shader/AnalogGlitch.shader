@@ -33,7 +33,7 @@ Shader "Hidden/Kino/Glitch/Analog"
     sampler2D _MainTex;
     float2 _MainTex_TexelSize;
 
-    float2 _ScanJitter;     // (displacement, threshold)
+    float2 _ScanLineJitter; // (displacement, threshold)
     float2 _VerticalJump;   // (amount, time)
     float2 _ColorDrift;     // (amount, time)
 
@@ -48,7 +48,7 @@ Shader "Hidden/Kino/Glitch/Analog"
         float v = i.uv.y;
 
         float jitter = nrand(v, _Time.x) * 2 - 1;
-        jitter *= step(_ScanJitter.y, abs(jitter)) * _ScanJitter.x;
+        jitter *= step(_ScanLineJitter.y, abs(jitter)) * _ScanLineJitter.x;
 
         float jump = lerp(v, frac(v + _VerticalJump.y), _VerticalJump.x);
 

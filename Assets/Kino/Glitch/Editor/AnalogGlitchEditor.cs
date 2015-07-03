@@ -29,13 +29,13 @@ namespace Kino
     [CustomEditor(typeof(AnalogGlitch))]
     public class AnalogGlitchEditor : Editor
     {
-        SerializedProperty _scanJitter;
+        SerializedProperty _scanLineJitter;
         SerializedProperty _verticalJump;
         SerializedProperty _colorDrift;
 
         void OnEnable()
         {
-            _scanJitter = serializedObject.FindProperty("_scanJitter");
+            _scanLineJitter = serializedObject.FindProperty("_scanLineJitter");
             _verticalJump = serializedObject.FindProperty("_verticalJump");
             _colorDrift = serializedObject.FindProperty("_colorDrift");
         }
@@ -44,7 +44,7 @@ namespace Kino
         {
             serializedObject.Update();
 
-            EditorGUILayout.PropertyField(_scanJitter);
+            EditorGUILayout.PropertyField(_scanLineJitter);
             EditorGUILayout.PropertyField(_verticalJump);
             EditorGUILayout.PropertyField(_colorDrift);
 

@@ -32,7 +32,7 @@ namespace Kino
         #region Public Properties
 
         [SerializeField, Range(0, 1)]
-        float _scanJitter = 0;
+        float _scanLineJitter = 0;
 
         [SerializeField, Range(0, 1)]
         float _verticalJump = 0;
@@ -64,9 +64,9 @@ namespace Kino
 
             _verticalJumpTime += Time.deltaTime * _verticalJump * 9.3f;
 
-            var thresh = Mathf.Clamp01(1.0f - _scanJitter * 1.2f);
-            var disp = 0.002f + Mathf.Pow(_scanJitter, 3) * 0.1f;
-            _material.SetVector("_ScanJitter", new Vector2(disp, thresh));
+            var thresh = Mathf.Clamp01(1.0f - _scanLineJitter * 1.2f);
+            var disp = 0.002f + Mathf.Pow(_scanLineJitter, 3) * 0.1f;
+            _material.SetVector("_ScanLineJitter", new Vector2(disp, thresh));
 
             var vj = new Vector2(_verticalJump, _verticalJumpTime);
             _material.SetVector("_VerticalJump", vj);
