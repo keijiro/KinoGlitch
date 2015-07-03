@@ -38,6 +38,9 @@ namespace Kino
         float _verticalJump = 0;
 
         [SerializeField, Range(0, 1)]
+        float _horizontalShake = 0;
+
+        [SerializeField, Range(0, 1)]
         float _colorDrift = 0;
 
         #endregion
@@ -62,7 +65,7 @@ namespace Kino
                 _material.hideFlags = HideFlags.DontSave;
             }
 
-            _verticalJumpTime += Time.deltaTime * _verticalJump * 9.3f;
+            _verticalJumpTime += Time.deltaTime * _verticalJump * 11.3f;
 
             var sl_thresh = Mathf.Clamp01(1.0f - _scanLineJitter * 1.2f);
             var sl_disp = 0.002f + Mathf.Pow(_scanLineJitter, 3) * 0.05f;
@@ -71,7 +74,9 @@ namespace Kino
             var vj = new Vector2(_verticalJump, _verticalJumpTime);
             _material.SetVector("_VerticalJump", vj);
 
-            var cd = new Vector2(_colorDrift * 0.02f, Time.time * 606.11f);
+            _material.SetFloat("_HorizontalShake", _horizontalShake * 0.2f);
+
+            var cd = new Vector2(_colorDrift * 0.04f, Time.time * 606.11f);
             _material.SetVector("_ColorDrift", cd);
 
             Graphics.Blit(source, destination, _material);

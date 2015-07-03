@@ -325,9 +325,10 @@ GameObject:
   - 92: {fileID: 2012891225}
   - 124: {fileID: 2012891224}
   - 81: {fileID: 2012891223}
+  - 114: {fileID: 2012891229}
   - 114: {fileID: 2012891228}
   - 114: {fileID: 2012891227}
-  - 114: {fileID: 2012891229}
+  - 95: {fileID: 2012891230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -427,6 +428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scanLineJitter: 0
   _verticalJump: 0
+  _horizontalShake: 0
   _colorDrift: 0
   _shader: {fileID: 4800000, guid: da33272284ea24f208f36998880990be, type: 3}
 --- !u!114 &2012891229
@@ -448,3 +450,20 @@ MonoBehaviour:
   rotationComponents: {x: 1, y: 1, z: 0}
   positionOctave: 3
   rotationOctave: 3
+--- !u!95 &2012891230
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2012891221}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7c0b5746436194670a1330e701de40f9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
