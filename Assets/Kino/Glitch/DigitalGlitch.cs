@@ -68,6 +68,8 @@ namespace Kino
 
             _trashFrame1 = new RenderTexture(Screen.width, Screen.height, 0);
             _trashFrame2 = new RenderTexture(Screen.width, Screen.height, 0);
+            _trashFrame1.hideFlags = HideFlags.DontSave;
+            _trashFrame2.hideFlags = HideFlags.DontSave;
 
             UpdateNoiseTexture();
         }
@@ -80,7 +82,7 @@ namespace Kino
             {
                 for (var x = 0; x < _noiseTexture.width; x++)
                 {
-                    if (Random.value > 0.85f) color = RandomColor();
+                    if (Random.value > 0.89f) color = RandomColor();
                     _noiseTexture.SetPixel(x, y, color);
                 }
             }
@@ -94,7 +96,7 @@ namespace Kino
 
         void Update()
         {
-            if (Random.value > 0.85f)
+            if (Random.value > Mathf.Lerp(0.9f, 0.5f, _intensity))
             {
                 SetUpResources();
                 UpdateNoiseTexture();

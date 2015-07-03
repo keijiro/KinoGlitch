@@ -64,14 +64,14 @@ namespace Kino
 
             _verticalJumpTime += Time.deltaTime * _verticalJump * 9.3f;
 
-            var thresh = Mathf.Clamp01(1.0f - _scanLineJitter * 1.2f);
-            var disp = 0.002f + Mathf.Pow(_scanLineJitter, 3) * 0.1f;
-            _material.SetVector("_ScanLineJitter", new Vector2(disp, thresh));
+            var sl_thresh = Mathf.Clamp01(1.0f - _scanLineJitter * 1.2f);
+            var sl_disp = 0.002f + Mathf.Pow(_scanLineJitter, 3) * 0.05f;
+            _material.SetVector("_ScanLineJitter", new Vector2(sl_disp, sl_thresh));
 
             var vj = new Vector2(_verticalJump, _verticalJumpTime);
             _material.SetVector("_VerticalJump", vj);
 
-            var cd = new Vector2(_colorDrift * 0.02f, Time.time * 18906.11f);
+            var cd = new Vector2(_colorDrift * 0.02f, Time.time * 606.11f);
             _material.SetVector("_ColorDrift", cd);
 
             Graphics.Blit(source, destination, _material);

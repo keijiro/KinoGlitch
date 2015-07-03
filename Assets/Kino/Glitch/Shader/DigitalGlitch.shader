@@ -48,14 +48,15 @@ Shader "Hidden/Kino/Glitch/Digital"
         float w_c = step(thresh, pow(glitch.z, 3.5)); // color glitch
 
         // Displacement.
-        float2 uv = i.uv + glitch.xy * w_d;
+        float2 uv = frac(i.uv + glitch.xy * w_d);
         float4 source = tex2D(_MainTex, uv);
 
         // Mix with trash frame.
         float3 color = lerp(source, tex2D(_TrashTex, uv), w_f).rgb;
 
         // Shuffle color components.
-        color = lerp(color, color - source.bbg * 2 + color.grr * 2, w_c);
+        float3 neg = saturate(color.grb + (1 - dot(color, 1)) * 0.5);
+        color = lerp(color, neg, w_c);
 
         return float4(color, source.a);
     }
