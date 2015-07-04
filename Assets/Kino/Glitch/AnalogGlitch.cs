@@ -31,17 +31,45 @@ namespace Kino
     {
         #region Public Properties
 
+        // Scan line jitter
+
         [SerializeField, Range(0, 1)]
         float _scanLineJitter = 0;
+
+        public float scanLineJitter {
+            get { return _scanLineJitter; }
+            set { _scanLineJitter = value; }
+        }
+
+        // Vertical jump
 
         [SerializeField, Range(0, 1)]
         float _verticalJump = 0;
 
+        public float verticalJump {
+            get { return _verticalJump; }
+            set { _verticalJump = value; }
+        }
+
+        // Horizontal shake
+
         [SerializeField, Range(0, 1)]
         float _horizontalShake = 0;
 
+        public float horizontalShake {
+            get { return _horizontalShake; }
+            set { _horizontalShake = value; }
+        }
+
+        // Color drift
+
         [SerializeField, Range(0, 1)]
         float _colorDrift = 0;
+
+        public float colorDrift {
+            get { return _colorDrift; }
+            set { _colorDrift = value; }
+        }
 
         #endregion
 
