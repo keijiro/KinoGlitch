@@ -1,4 +1,4 @@
-﻿//
+//
 // KinoGlitch - Video glitch effect
 //
 // Copyright (C) 2015 Keijiro Takahashi
