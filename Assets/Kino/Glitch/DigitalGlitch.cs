@@ -125,6 +125,16 @@ namespace Kino
             Graphics.Blit(source, destination, _material);
         }
 
+        private void OnDestroy()
+        {
+            if (this._material != null)
+            {
+                GameObject.DestroyImmediate(this._material);
+            }
+
+            this._material = null;
+        }
+
         #endregion
     }
 }
