@@ -20,111 +20,97 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace Kino
 {
-    [ExecuteInEditMode]
-    [RequireComponent(typeof(Camera))]
-    [AddComponentMenu("Kino Image Effects/Digital Glitch")]
-    public class DigitalGlitch : MonoBehaviour
+
+  [System.Serializable]
+  [UnityEngine.Rendering.PostProcessing.PostProcess(typeof(DigitalGlitchRenderer), PostProcessEvent.AfterStack, "Kino Image Effects/DigitalGlitch")]
+  public class DigitalGlitch : PostProcessEffectSettings
+  {
+    [SerializeField, Range(0, 1f)]
+    public FloatParameter intensity = new FloatParameter() { value = 0 };
+  }
+
+
+  public class DigitalGlitchRenderer : PostProcessEffectRenderer<DigitalGlitch>
+  {
+    private Texture2D _noiseTexture;
+    private RenderTexture _trashFrame1;
+    private RenderTexture _trashFrame2;
+
+
+    #region Private Functions
+
+    public DigitalGlitchRenderer() : base()
     {
-        #region Public Properties
+      if (_noiseTexture != null) return;
 
-        [SerializeField, Range(0, 1)]
-        float _intensity = 0;
+      _noiseTexture = new Texture2D(64, 32, TextureFormat.ARGB32, false);
+      _noiseTexture.hideFlags = HideFlags.DontSave;
+      _noiseTexture.wrapMode = TextureWrapMode.Clamp;
+      _noiseTexture.filterMode = FilterMode.Point;
 
-        public float intensity {
-            get { return _intensity; }
-            set { _intensity = value; }
-        }
+      _trashFrame1 = new RenderTexture(Screen.width, Screen.height, 0);
+      _trashFrame2 = new RenderTexture(Screen.width, Screen.height, 0);
+      _trashFrame1.hideFlags = HideFlags.DontSave;
+      _trashFrame2.hideFlags = HideFlags.DontSave;
 
-        #endregion
-
-        #region Private Properties
-
-        [SerializeField] Shader _shader;
-
-        Material _material;
-        Texture2D _noiseTexture;
-        RenderTexture _trashFrame1;
-        RenderTexture _trashFrame2;
-
-        #endregion
-
-        #region Private Functions
-
-        static Color RandomColor()
-        {
-            return new Color(Random.value, Random.value, Random.value, Random.value);
-        }
-
-        void SetUpResources()
-        {
-            if (_material != null) return;
-
-            _material = new Material(_shader);
-            _material.hideFlags = HideFlags.DontSave;
-
-            _noiseTexture = new Texture2D(64, 32, TextureFormat.ARGB32, false);
-            _noiseTexture.hideFlags = HideFlags.DontSave;
-            _noiseTexture.wrapMode = TextureWrapMode.Clamp;
-            _noiseTexture.filterMode = FilterMode.Point;
-
-            _trashFrame1 = new RenderTexture(Screen.width, Screen.height, 0);
-            _trashFrame2 = new RenderTexture(Screen.width, Screen.height, 0);
-            _trashFrame1.hideFlags = HideFlags.DontSave;
-            _trashFrame2.hideFlags = HideFlags.DontSave;
-
-            UpdateNoiseTexture();
-        }
-
-        void UpdateNoiseTexture()
-        {
-            var color = RandomColor();
-
-            for (var y = 0; y < _noiseTexture.height; y++)
-            {
-                for (var x = 0; x < _noiseTexture.width; x++)
-                {
-                    if (Random.value > 0.89f) color = RandomColor();
-                    _noiseTexture.SetPixel(x, y, color);
-                }
-            }
-
-            _noiseTexture.Apply();
-        }
-
-        #endregion
-
-        #region MonoBehaviour Functions
-
-        void Update()
-        {
-            if (Random.value > Mathf.Lerp(0.9f, 0.5f, _intensity))
-            {
-                SetUpResources();
-                UpdateNoiseTexture();
-            }
-        }
-
-        void OnRenderImage(RenderTexture source, RenderTexture destination)
-        {
-            SetUpResources();
-
-            // Update trash frames on a constant interval.
-            var fcount = Time.frameCount;
-            if (fcount % 13 == 0) Graphics.Blit(source, _trashFrame1);
-            if (fcount % 73 == 0) Graphics.Blit(source, _trashFrame2);
-
-            _material.SetFloat("_Intensity", _intensity);
-            _material.SetTexture("_NoiseTex", _noiseTexture);
-            var trashFrame = Random.value > 0.5f ? _trashFrame1 : _trashFrame2;
-            _material.SetTexture("_TrashTex", trashFrame);
-
-            Graphics.Blit(source, destination, _material);
-        }
-
-        #endregion
+      UpdateNoiseTexture();
     }
+
+    static Color RandomColor()
+    {
+      return new Color(Random.value, Random.value, Random.value, Random.value);
+    }
+
+    void UpdateNoiseTexture()
+    {
+      var color = RandomColor();
+
+      for (var y = 0; y < _noiseTexture.height; y++)
+      {
+        for (var x = 0; x < _noiseTexture.width; x++)
+        {
+          if (Random.value > 0.89f)
+          {
+            color = RandomColor();
+          }
+          _noiseTexture.SetPixel(x, y, color);
+        }
+      }
+
+      _noiseTexture.Apply();
+    }
+
+    #endregion
+
+    public override void Render(PostProcessRenderContext context)
+    {
+      var sheet = context.propertySheets.Get(Shader.Find("Hidden/Kino/Glitch/Digital"));
+      if (Random.value > Mathf.Lerp(0.9f, 0.5f, settings.intensity.value))
+      {
+        UpdateNoiseTexture();
+      }
+
+      // Update trash frames on a constant interval.
+      var fcount = Time.frameCount;
+      if (fcount % 13 == 0) context.command.Blit(context.source, _trashFrame1);
+
+      if (fcount % 73 == 0) context.command.Blit(context.source, _trashFrame2);
+
+
+      sheet.properties.SetFloat("_Intensity", settings.intensity);
+      sheet.properties.SetTexture("_NoiseTex", _noiseTexture);
+      var trashFrame = Random.value > 0.5f ? _trashFrame1 : _trashFrame2;
+      sheet.properties.SetTexture("_TrashTex", trashFrame);
+
+      context.command.BlitFullscreenTriangle(context.source, context.destination, sheet, 0);
+    }
+
+  }
 }
