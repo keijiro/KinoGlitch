@@ -31,7 +31,7 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 0
+    value: 0.314
 --- !u!114 &114921481503169910
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -49,13 +49,13 @@ MonoBehaviour:
     value: 1
   scanLineJitter:
     overrideState: 1
-    value: 0.449
+    value: 0
   verticalJump:
     overrideState: 1
-    value: 0.254
+    value: 0
   horizontalShake:
     overrideState: 1
-    value: 0.381
+    value: 0
   colorDrift:
     overrideState: 1
-    value: 0.695
+    value: 0
